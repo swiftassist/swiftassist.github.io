@@ -17,10 +17,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
     <link rel="icon" type="image/png" href="icon.png">
-    <script type="text/javascript" src="https://platform.linkedin.com/in.js">
-      api_key:   75uaiwq26fyxj9
-    </script>
-</head>
+  </head>
 
 <body>
     <div class="navbar-fixed">
@@ -115,8 +112,15 @@
             $('#homeLoad').removeClass('selected');
             $('#timeLoad').addClass('selected');
             $('#content').empty();
-            
-            //IN.API.Raw("https://api.linkedin.com/v1/job-search?keywords="+).method(methodType).body(bodyContent).result(resultCallback);
+            $('#content').append('<div class="item animated bounceInRight" style="padding-bottom: 40px;"><div class="row"><div class="input-field col s12"><textarea id="journal" class="materialize-textarea"></textarea><label for="icon_prefix2">Submit Concerns/Reviews</label></div><center><a style="width:90%;" class="waves-effect waves-light btn" onclick="save()">Submit</a></center></div><div id="entries"></div></div>');
+        }
+        function save(){
+          var ref= new Firebase("https://swiftassist.firebaseio.com/posts");
+          var newPostRef = ref.push();
+          newPostRef.set({
+            review: $('#journal').val(),
+            author: ref.getAuth().password.email
+          });
         }
         function setData() {
           var ref = new Firebase("https://swiftassist.firebaseio.com");
