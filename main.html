@@ -17,8 +17,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
     <link rel="icon" type="image/png" href="icon.png">
-    <script type="text/javascript" src="//platform.linkedin.com/in.js">
-      api_key:   75uaiwq26fyxj9 
+    <script type="text/javascript" src="https://platform.linkedin.com/in.js">
+      api_key:   75uaiwq26fyxj9
     </script>
 </head>
 
@@ -284,24 +284,22 @@
               ref.once("value", function(snapshot) {
                     // The callback function will get called twice, once for "fred" and once for "barney"
                     snapshot.forEach(function(childSnapshot) {
-                          // key will be "fred" the first time and "barney" the second time
                           var key = childSnapshot.key();
                           // childData will be the actual contents of the child
                           var childData = childSnapshot.val();
                           var iconName= childData.type + '50.png';
-                          var latlng = new google.maps.LatLng(childData.lat, childData.long);
+                          var latlng = new google.maps.LatLng(childData.lat, childData.lon);
                           var shelter = new google.maps.Marker({
                                 position: latlng,
                                 animation: google.maps.Animation.DROP,
                                 map: map,
                                 title:"Person needs Help",
-                                icon:iconName
+                                icon: iconName
                           });
-                          shelter.setMap(map);
-                         /*google.maps.event.addListener(shelter, 'click', function () {
-                              infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.long+')">Go</button></center>');
+                         google.maps.event.addListener(shelter, 'click', function () {
+                              infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><h5>Help Person</h5><p>' + childData.type + '<br /><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.lon+')">Go</button></center>');
                               infowindow.open(map, shelter);
-                          });*/
+                          });
                     });
               });
           }
