@@ -306,7 +306,7 @@
                         });
                         console.log(shelter)
                        google.maps.event.addListener(shelter, 'click', function () {
-                         console.log("working");
+                            console.log("working");
                             infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><h5>Needs Help</h5><p>' + childData.type + '<br/><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.long+')">Go</button></center>');
                             infowindow.open(map, shelter);
                         });
