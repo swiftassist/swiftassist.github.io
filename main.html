@@ -3,7 +3,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>ResQ</title>
+    <title>SwiftAssist</title>
     <!--Import Google Icon Font-->
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
@@ -205,13 +205,6 @@
               console.log("The read failed: " + errorObject.code);
             });
         };
-        function delDiv(e) {
-            console.log("deleted");
-            console.log(e);
-            $(e).parent().remove();
-            var journal = document.getElementById("entries").innerHTML
-            localStorage.setItem('journal', JSON.stringify(journal));
-        }
         function showMap(position) {
               $('#facebook').children().remove();
               var ref=new Firebase("https://swiftassist.firebaseio.com/emergency");
