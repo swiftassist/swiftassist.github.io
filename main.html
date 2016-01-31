@@ -48,7 +48,7 @@
                 <a href="index.html#test2" onclick="loadMap()"  id="mapLoad"><img style="width:45px;" src="map.png"></a>
             </li>
             <li class="tab col s4" style="margin-top:-10px;">
-                <a href="index.html#test2" onclick="loadTime()"  id="timeLoad"><img style="width:45px;" src="graph.png"></a>
+                <a href="index.html#test2" onclick="loadLink()"  id="timeLoad"><img style="width:45px;" src="graph.png"></a>
             </li>
         </ul>
     </div>
@@ -108,17 +108,14 @@
             });
         }
 
-        function loadTime() {
+        function loadLink() {
             $('#facebook').children().remove();
             $('#settingsLoad').removeClass('selected');
             $('#mapLoad').removeClass('selected');
             $('#homeLoad').removeClass('selected');
             $('#timeLoad').addClass('selected');
             $('#content').empty();
-            $('#content').append('<div class="item animated bounceInRight" style="padding-bottom: 40px;"><div class="row"><div class="input-field col s12"><textarea id="journal" class="materialize-textarea"></textarea><label form="icon_prefix2">Timeline Entry</label></div><center><a style="width:90%;" class="waves-effect waves-light btn" onclick="getLoc()">Submit</a></center></div><div id="entries"></div></div>');
-            var entries = localStorage.getItem('journal');
-            var parsed = JSON.parse(entries);
-            $('#entries').append(parsed);
+
         }
         function setData() {
           var ref = new Firebase("https://swiftassist.firebaseio.com");
@@ -207,37 +204,13 @@
             }, function (errorObject) {
               console.log("The read failed: " + errorObject.code);
             });
-        }
-        function reset() {
-            localStorage.setItem('journal', "");
-        }
-        function getLoc() {
-            var message = $('textarea#journal').val();
-            if (message != "") {
-                 if (navigator.geolocation) {
-                        navigator.geolocation.getCurrentPosition(addEntry);
-                    } else {
-                        x.innerHTML = "Geolocation is not supported by this browser.";
-                 }
-            }
-        }
+        };
         function delDiv(e) {
             console.log("deleted");
             console.log(e);
             $(e).parent().remove();
             var journal = document.getElementById("entries").innerHTML
             localStorage.setItem('journal', JSON.stringify(journal));
-        }
-        function addEntry(position) {
-            var time = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-            var message = $('textarea#journal').val();
-            var d = new Date();
-            var date = d.getMonth() + 1
-            var date = date + "/" + d.getDate() + "/" + d.getFullYear();
-            $('#entries').append('<div class="item animated bounceInRight"><img src="cancel.png" style="width:35px; float:right;" onclick="delDiv(this)"></img><h5><strong>' + date + ' (' + time + ')</strong></h5><br><p style="margin-top: -20px;">Lat: '+ position.coords.latitude +'<br>Long: ' + position.coords.longitude + '</p><hr style="background-color:#7f8c8d; color:#7f8c8d;"><br><p  style="margin-top: -20px;">' + message + '</p></div>');
-            var journal = document.getElementById("entries").innerHTML
-            localStorage.setItem('journal', JSON.stringify(journal));
-            $('#journal').val("");
         }
         function showMap(position) {
               $('#facebook').children().remove();
