@@ -17,6 +17,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
     <link rel="icon" type="image/png" href="icon.png">
+    <script type="text/javascript" src="//platform.linkedin.com/in.js">
+      api_key:   75uaiwq26fyxj9 
+    </script>
 </head>
 
 <body>
@@ -27,7 +30,6 @@
                 <!--<img src="apple-touch-icon.png">-->
                 <img src="settings.png" onclick="settings();" style="float:right; margin-top: 5px; margin-right: 5px; width: 45px;">
                 <img src="facebook.png" onclick="forum();" style="float:right; margin-top: 5px; margin-right: 5px; width: 45px;">
-                <img src="addHouse.png" onclick="addHouse();" style="float:left; margin-top: 5px; margin-left: 5px; width: 45px;">
             </div>
         </nav>
     </div>
@@ -76,16 +78,6 @@
         $(document).ready(function() {
             loadUserSettings();
         });
-        function settings() {
-            $('#facebook').children().remove();
-            $('#content').empty();
-            var marqee = localStorage.getItem('?marqee');
-            if (marqee == true) {
-                $('#content').append('<center><div class="animated flipInY"><h5>SwiftAssist:</h5><br><h5>An Outreach to those in Need</h5><br><br><p>Adiyan Kaul<br>Sohan Vichare<br>Avik Jain<br>Yash Tandon</p><h6>Made with <img src="hearts.png" style="margin-top: 10px;width: 20px;"> at Los Altos Hacks 2016<br>Icons by <a href="https://icons8.com/" target="_blank">Icons8</a><br>UI built with <a href="http://materializecss.com/" target="_blank">MaterializeCSS</a></h6></div></div></center>');
-                console.log(true);
-            } else {
-                $('#content').append('<center><div class="animated flipInY"><h5>SwiftAssist:</h5><br><h5>An Outreach to those in Need</h5><br><br><p>Adiyan Kaul<br>Sohan Vichare<br>Avik Jain<br>Yash Tandon</p><h6>Made with <img src="hearts.png" style="margin-top: 10px;width: 20px;"> at Los Altos Hacks<br>Icons by <a href="https://icons8.com/" target="_blank">Icons8</a><br>UI built with <a href="http://materializecss.com/" target="_blank">MaterializeCSS</a></h6></div></div></center>');            }
-        }
 
         function loadUserSettings() {
             $('#facebook').children().remove();
@@ -123,7 +115,7 @@
             $('#homeLoad').removeClass('selected');
             $('#timeLoad').addClass('selected');
             $('#content').empty();
-            $('#content').append('<div class="item animated bounceInRight" style="padding-bottom: 40px;"><div class="row"><div class="input-field col s12"><textarea id="journal" class="materialize-textarea"></textarea><label for="icon_prefix2">Timeline Entry</label></div><center><a style="width:90%;" class="waves-effect waves-light btn" onclick="getLoc()">Submit</a></center></div><div id="entries"></div></div>');
+            $('#content').append('<div class="item animated bounceInRight" style="padding-bottom: 40px;"><div class="row"><div class="input-field col s12"><textarea id="journal" class="materialize-textarea"></textarea><label form="icon_prefix2">Timeline Entry</label></div><center><a style="width:90%;" class="waves-effect waves-light btn" onclick="getLoc()">Submit</a></center></div><div id="entries"></div></div>');
             var entries = localStorage.getItem('journal');
             var parsed = JSON.parse(entries);
             $('#entries').append(parsed);
@@ -162,7 +154,7 @@
                 z.checked=false;
               }
               var a= document.getElementById('inhaler');
-              if(z.checked){
+              if(a.checked){
                 ref2.update({ inhaler: 'true'});
                 a.checked=true;
               }else{
@@ -175,7 +167,7 @@
         function getUserSettings() {
             $('#facebook').children().remove();
             $(".se-pre-con").fadeIn("slow");
-            $("#content").append('<center><strong><p>User Settings</p></strong></center><br><center><div id="switch" class="switch"><p>Are you CPR certified?</p><label>No<input id="cpr" type="checkbox" onclick="setData()" id="newsCheck"><span id="switch1" class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch2" class="switch"><p>Are you a doctor?</p><label>No<input id="doctor" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch3" class="switch"><p>Do you posess an epi pen?</p><label>No<input id="pen" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch4" class="switch"><p>Do you posess an inhaler?</p><label>No<input id="inhaler" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center>')
+            $("#content").append('<center><strong><p>User Settings</p></strong></center><br><center><div id="switch" class="switch"><p>Are you CPR certified?</p><label>No<input id="cpr" type="checkbox" onclick="setData()" id="newsCheck"><span id="switch1" class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch2" class="switch"><p>Are you a doctor?</p><label>No<input id="doctor" type="checkbox" onclick="setData()"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch3" class="switch"><p>Do you posess an epi pen?</p><label>No<input id="pen" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch4" class="switch"><p>Do you posess an inhaler?</p><label>No<input id="inhaler" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center>');
             var ref = new Firebase("https://swiftassist.firebaseio.com");
             var authData = ref.getAuth();
             var email=authData.password.email;
@@ -247,22 +239,18 @@
             localStorage.setItem('journal', JSON.stringify(journal));
             $('#journal').val("");
         }
-
-
         function showMap(position) {
               $('#facebook').children().remove();
               var ref=new Firebase("https://swiftassist.firebaseio.com/emergency");
               var mapcanvas = document.createElement('div');
               $(mapcanvas).addClass('map');
               $('#content').append('<article style="margin-top:-80px;"></article>');
+              document.querySelector('article').appendChild(mapcanvas);
               // Adds ID to the new div
               mapcanvas.id = 'mapcanvas';
               mapcanvas.style.height = '100vh';
               mapcanvas.style.width = '100vw';
               // Adds the new block element as the last thing within the mapwrapper block
-              $(mapcanvas).ready(function() {
-                document.querySelector('article').appendChild(mapcanvas);
-              });
               // creates a new variable 'latlng' off of the google maps object
               user_lat = position.coords.latitude;
               user_long = position.coords.longitude;
@@ -285,36 +273,38 @@
               var person = new google.maps.Marker({
                   position: latlng,
                   map: map,
+                  animation: google.maps.Animation.DROP,
                   title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)",
                   icon: 'http://maps.google.com/mapfiles/ms/micons/red-dot.png'
               });
-
-            google.maps.event.addListener(person, 'click', function () {
-                infowindow.setContent("Current Location");
-                infowindow.open(map, person);
-            });
-            ref.once("value", function(snapshot) {
-                  snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key();
-                        var childData = childSnapshot.val();
-                        var latlng = new google.maps.LatLng(childData.lat, childData.long);
-                        var shelter = new google.maps.Marker({
-                              position:latlng,
-                              map: map,
-                              title:"Needs Help",
-                              icon: person.png
-                        });
-                        console.log(shelter)
-                       google.maps.event.addListener(shelter, 'click', function () {
-                            console.log("working");
-                            infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><h5>Needs Help</h5><p>' + childData.type + '<br/><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.long+')">Go</button></center>');
-                            infowindow.open(map, shelter);
-                        });
-                  });
-            });
-
+              google.maps.event.addListener(person, 'click', function () {
+                   infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><button class="btn waves-effect waves-light red darken-4" onclick="go('+position.coords.latitude+','+position.coords.longitude+')">Go</button></center>');
+                   infowindow.open(map, person);
+               });
+              ref.once("value", function(snapshot) {
+                    // The callback function will get called twice, once for "fred" and once for "barney"
+                    snapshot.forEach(function(childSnapshot) {
+                          // key will be "fred" the first time and "barney" the second time
+                          var key = childSnapshot.key();
+                          // childData will be the actual contents of the child
+                          var childData = childSnapshot.val();
+                          var iconName= childData.type + '50.png';
+                          var latlng = new google.maps.LatLng(childData.lat, childData.long);
+                          var shelter = new google.maps.Marker({
+                                position: latlng,
+                                animation: google.maps.Animation.DROP,
+                                map: map,
+                                title:"Person needs Help",
+                                icon:iconName
+                          });
+                          shelter.setMap(map);
+                         /*google.maps.event.addListener(shelter, 'click', function () {
+                              infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.long+')">Go</button></center>');
+                              infowindow.open(map, shelter);
+                          });*/
+                    });
+              });
           }
-
           function error(error) {
             alert('code: ' + error.code + '\n' +
         'message: ' + error.message + '\n');
