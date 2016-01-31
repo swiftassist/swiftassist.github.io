@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>ResQ</title>
+    <!--Import Google Icon Font-->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animate.css">
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script src="https://cdn.firebase.com/js/client/2.3.1/firebase.js"></script>
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+
+<body>
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper" style="background-color:#F44336;">
+                <a href="index.html#!" class="brand-logo center">SwiftAssist</a>
+                <!--<img src="apple-touch-icon.png">-->
+                <img src="settings.png" onclick="settings();" style="float:right; margin-top: 5px; margin-right: 5px; width: 45px;">
+                <img src="facebook.png" onclick="forum();" style="float:right; margin-top: 5px; margin-right: 5px; width: 45px;">
+                <img src="addHouse.png" onclick="addHouse();" style="float:left; margin-top: 5px; margin-left: 5px; width: 45px;">
+            </div>
+        </nav>
+    </div>
+    <div class="row newsHolder">
+
+    </div>
+    <div class="row">
+        <ul class="tabs bottom z-depth-3" style="z-index: 1000; padding-top: 7px; height: 45px;">
+            <li class="tab col s4" style="margin-top:-10px;">
+                <a href="index.html#test4" onclick="loadUserSettings()" class="selected" id="settingsLoad"><img style="width:45px;" src="usersettings.png"></a>
+            </li>
+            <li class="tab col s4" style="margin-top:-10px;">
+                <a href="index.html#test1" onclick="loadHelp()"  id="homeLoad"><img style="width:45px;" src="people.png"></a>
+            </li>
+            <li class="tab col s4" style="margin-top:-10px;">
+                <a href="index.html#test2" onclick="loadMap()"  id="mapLoad"><img style="width:45px;" src="map.png"></a>
+            </li>
+            <li class="tab col s4" style="margin-top:-10px;">
+                <a href="index.html#test2" onclick="loadTime()"  id="timeLoad"><img style="width:45px;" src="graph.png"></a>
+            </li>
+        </ul>
+    </div>
+    <div id="content" style="padding-bottom: 100px;">
+
+    </div>
+
+    <div class="se-pre-con"></div>
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+    <center>
+        <div id="facebook">
+            <div id="fb-root"></div>
+            <div class="fb-comments" data-href="http://resqmob.paperplane.io/#" data-width="500" data-numposts="10"></div>
+        </div>
+    </center>
+    <script>
+        var user_lat;
+        var user_long;
+        $(window).load(function() {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+	    });
+
+        $(document).ready(function() {
+            loadUserSettings();
+        });
+        function settings() {
+            $('#facebook').children().remove();
+            $('#content').empty();
+            var marqee = localStorage.getItem('?marqee');
+            if (marqee == true) {
+                $('#content').append('<center><div class="animated flipInY"><h5>SwiftAssist:</h5><br><h5>An Outreach to those in Need</h5><br><br><p>Adiyan Kaul<br>Sohan Vichare<br>Avik Jain<br>Yash Tandon</p><h6>Made with <img src="hearts.png" style="margin-top: 10px;width: 20px;"> at Los Altos Hacks 2016<br>Icons by <a href="https://icons8.com/" target="_blank">Icons8</a><br>UI built with <a href="http://materializecss.com/" target="_blank">MaterializeCSS</a></h6></div></div></center>');
+                console.log(true);
+            } else {
+                $('#content').append('<center><div class="animated flipInY"><h5>SwiftAssist:</h5><br><h5>An Outreach to those in Need</h5><br><br><p>Adiyan Kaul<br>Sohan Vichare<br>Avik Jain<br>Yash Tandon</p><h6>Made with <img src="hearts.png" style="margin-top: 10px;width: 20px;"> at Los Altos Hacks<br>Icons by <a href="https://icons8.com/" target="_blank">Icons8</a><br>UI built with <a href="http://materializecss.com/" target="_blank">MaterializeCSS</a></h6></div></div></center>');            }
+        }
+
+        function loadUserSettings() {
+            $('#facebook').children().remove();
+            $('#timeLoad').removeClass('selected');
+            $('#mapLoad').removeClass('selected');
+            $('#homeLoad').removeClass('selected');
+            $('#settingsLoad').addClass('selected');
+            $('#content').empty();
+            getUserSettings();
+        }
+
+        function loadHelp() {
+            $('#facebook').children().remove();
+            $('#settingsLoad').removeClass('selected');
+            $('#mapLoad').removeClass('selected');
+            $('#timeLoad').removeClass('selected');
+            $('#homeLoad').addClass('selected');
+            $('.indicator').css('left', '480px;')
+            $('#content').empty();
+            var ref=new Firebase("https://swiftassist.firebaseio.com/emergency");
+            ref.on("value", function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var cur=childSnapshot.val();
+                    $('#content').append('<div class="item animated bounceInUp"><img class="img" src="' +cur.type+'.png" style="display:inline-block;"><div style="display:inline-block; float: right; padding: 15px; margin-top: -10px;"><h6 style="font-size: 15px;">Needs Help</h6><p style="margin-top:-5px;"><p style="margin-top:-15px;">0.6 miles away</p><p style="margin-top:-15px;"></p></div><a style="width:100%; display: inline-block;" class="waves-effect waves-light btn"href="'+ go2(cur.lat,cur.lon)+'">Find Person to Help</a></div>');
+                });
+            }, function (errorObject) {
+                console.log("The read failed: " + errorObject.code);
+            });
+        }
+
+        function loadTime() {
+            $('#facebook').children().remove();
+            $('#settingsLoad').removeClass('selected');
+            $('#mapLoad').removeClass('selected');
+            $('#homeLoad').removeClass('selected');
+            $('#timeLoad').addClass('selected');
+            $('#content').empty();
+            $('#content').append('<div class="item animated bounceInRight" style="padding-bottom: 40px;"><div class="row"><div class="input-field col s12"><textarea id="journal" class="materialize-textarea"></textarea><label for="icon_prefix2">Timeline Entry</label></div><center><a style="width:90%;" class="waves-effect waves-light btn" onclick="getLoc()">Submit</a></center></div><div id="entries"></div></div>');
+            var entries = localStorage.getItem('journal');
+            var parsed = JSON.parse(entries);
+            $('#entries').append(parsed);
+        }
+        function setData() {
+          var ref = new Firebase("https://swiftassist.firebaseio.com");
+          var authData = ref.getAuth();
+          var email=authData.password.email;
+          var index= email.search("@");
+          var real= email.substring(0,index);
+          var ref2= new Firebase("https://swiftassist.firebaseio.com/userInfo/"+real);
+          ref2.on("value", function(snapshot) {
+            var val= snapshot.val();
+              var x= document.getElementById('cpr');
+              if(x.checked){
+                ref2.update({ cpr: 'true'});
+                x.checked=true;
+              }else{
+                ref2.update({ cpr: 'false'});
+                x.checked=false;
+              }
+              var y= document.getElementById('doctor');
+              if(y.checked){
+                ref2.update({ doctor: 'true'});
+                y.checked=true;
+              }else{
+                ref2.update({ doctor: 'false'});
+                y.checked=false;
+              }
+              var z= document.getElementById('pen');
+              if(z.checked){
+                ref2.update({ epipen: 'true'});
+                z.checked=true;
+              }else{
+                ref2.update({ epipen: 'false'});
+                z.checked=false;
+              }
+              var a= document.getElementById('inhaler');
+              if(z.checked){
+                ref2.update({ inhaler: 'true'});
+                a.checked=true;
+              }else{
+                ref2.update({ inhaler: 'false'});
+                a.checked=false;
+              }
+          })
+
+        }
+        function getUserSettings() {
+            $('#facebook').children().remove();
+            $(".se-pre-con").fadeIn("slow");
+            $("#content").append('<center><strong><p>User Settings</p></strong></center><br><center><div id="switch" class="switch"><p>Are you CPR certified?</p><label>No<input id="cpr" type="checkbox" onclick="setData()" id="newsCheck"><span id="switch1" class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch2" class="switch"><p>Are you a doctor?</p><label>No<input id="doctor" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch3" class="switch"><p>Do you posess an epi pen?</p><label>No<input id="pen" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center><br><br><br><center><div id="switch4" class="switch"><p>Do you posess an inhaler?</p><label>No<input id="inhaler" type="checkbox" onclick="setData()" id="newsCheck"><span class="lever"></span>Yes</label></div></center>')
+            var ref = new Firebase("https://swiftassist.firebaseio.com");
+            var authData = ref.getAuth();
+            var email=authData.password.email;
+            var index= email.search("@");
+            var real= email.substring(0,index);
+            var ref2= new Firebase("https://swiftassist.firebaseio.com/userInfo");
+            ref2.on("value", function(snapshot) {
+              var val= snapshot.val();
+              if(val[real]==null){
+                console.log("no data");
+              }else{
+                var x =document.getElementById('cpr');
+                if(val[real].cpr=="true"){
+                  x.checked=true;
+                }else{
+                  x.checked=false;
+                }
+                var y =document.getElementById('doctor');
+                if(val[real].doctor=="true"){
+                  y.checked=true;
+                }else{
+                  y.checked=false;
+                }
+                var z =document.getElementById('pen');
+                if(val[real].epipen=="true"){
+                  z.checked=true;
+                }else{
+                  z.checked=false;
+                }
+                var a =document.getElementById('inhaler');
+                if(val[real].inhaler=="true"){
+                  a.checked=true;
+                }else{
+                  a.checked=false;
+                }
+              }
+            }, function (errorObject) {
+              console.log("The read failed: " + errorObject.code);
+            });
+        }
+        function reset() {
+            localStorage.setItem('journal', "");
+        }
+        function getLoc() {
+            var message = $('textarea#journal').val();
+            if (message != "") {
+                 if (navigator.geolocation) {
+                        navigator.geolocation.getCurrentPosition(addEntry);
+                    } else {
+                        x.innerHTML = "Geolocation is not supported by this browser.";
+                 }
+            }
+        }
+        function delDiv(e) {
+            console.log("deleted");
+            console.log(e);
+            $(e).parent().remove();
+            var journal = document.getElementById("entries").innerHTML
+            localStorage.setItem('journal', JSON.stringify(journal));
+        }
+        function addEntry(position) {
+            var time = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+            var message = $('textarea#journal').val();
+            var d = new Date();
+            var date = d.getMonth() + 1
+            var date = date + "/" + d.getDate() + "/" + d.getFullYear();
+            $('#entries').append('<div class="item animated bounceInRight"><img src="cancel.png" style="width:35px; float:right;" onclick="delDiv(this)"></img><h5><strong>' + date + ' (' + time + ')</strong></h5><br><p style="margin-top: -20px;">Lat: '+ position.coords.latitude +'<br>Long: ' + position.coords.longitude + '</p><hr style="background-color:#7f8c8d; color:#7f8c8d;"><br><p  style="margin-top: -20px;">' + message + '</p></div>');
+            var journal = document.getElementById("entries").innerHTML
+            localStorage.setItem('journal', JSON.stringify(journal));
+            $('#journal').val("");
+        }
+
+
+        function showMap(position) {
+              $('#facebook').children().remove();
+              var ref=new Firebase("https://swiftassist.firebaseio.com/emergency");
+              var mapcanvas = document.createElement('div');
+              $(mapcanvas).addClass('map');
+              $('#content').append('<article style="margin-top:-80px;"></article>');
+              // Adds ID to the new div
+              mapcanvas.id = 'mapcanvas';
+              mapcanvas.style.height = '100vh';
+              mapcanvas.style.width = '100vw';
+              // Adds the new block element as the last thing within the mapwrapper block
+              $(mapcanvas).ready(function() {
+                document.querySelector('article').appendChild(mapcanvas);
+              });
+              // creates a new variable 'latlng' off of the google maps object
+              user_lat = position.coords.latitude;
+              user_long = position.coords.longitude;
+              var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+              //console.log(latlng);
+              // create new variable that contains options in key:value pairs
+              var myOptions = {
+                zoom: 15,
+                center: latlng,
+                // ROADMAP is set by default, other options are HYBRID, SATELLITE and TERRAIN
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              };
+
+              // creates the new 'map' variable using the google object
+              // then using the 'mapcanvas' ID appending the options
+              var infowindow = new google.maps.InfoWindow();
+              var map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+              var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
+              // creates new 'marker' variable
+              var person = new google.maps.Marker({
+                  position: latlng,
+                  map: map,
+                  title:"You are here! (at least within a "+position.coords.accuracy+" meter radius)",
+                  icon: 'http://maps.google.com/mapfiles/ms/micons/red-dot.png'
+              });
+
+            google.maps.event.addListener(person, 'click', function () {
+                infowindow.setContent("Current Location");
+                infowindow.open(map, person);
+            });
+            ref.once("value", function(snapshot) {
+                  snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key();
+                        var childData = childSnapshot.val();
+                        var latlng = new google.maps.LatLng(childData.lat, childData.long);
+                        var shelter = new google.maps.Marker({
+                              position:latlng,
+                              map: map,
+                              title:"Needs Help",
+                              icon: person.png
+                        });
+                        console.log(shelter)
+                       google.maps.event.addListener(shelter, 'click', function () {
+                         console.log("working");
+                            infowindow.setContent('<center><span style="padding: 0px; text-align:left" align="left"><h5>Needs Help</h5><p>' + childData.type + '<br/><button class="btn waves-effect waves-light red darken-4" onclick="go('+childData.lat+','+childData.long+')">Go</button></center>');
+                            infowindow.open(map, shelter);
+                        });
+                  });
+            });
+
+          }
+
+          function error(error) {
+            alert('code: ' + error.code + '\n' +
+        'message: ' + error.message + '\n');
+            // console.log(arguments);
+          }
+        function loadMap() {
+            $('#facebook').children().remove();
+            $('#settingsLoad').removeClass('selected');
+            $('#timeLoad').removeClass('selected');
+            $('#homeLoad').removeClass('selected');
+            $('#mapLoad').addClass('selected');
+            $('#content').empty();
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(showMap,error);
+            } else {
+              alert('not supported');
+            }
+        }
+
+        function go(lat, long) {
+            var url = ' https://maps.google.com/maps?f=d&saddr=' + user_lat + ',' + user_long + '&daddr=' + lat + ',' + long;
+            var win = window.open(url, '_blank');
+        }
+        function go2(lat, long) {
+            return 'https://maps.google.com/maps?f=&daddr=' + lat + ',' + long;
+        }
+
+        function forum() {
+           $('#settingsLoad').removeClass('selected');
+            $('#timeLoad').removeClass('selected');
+            $('#homeLoad').removeClass('selected');
+            $('#mapLoad').removeClass('selected');
+           $('#content').empty();
+           console.log('clicked');
+           $('#facebook').append('<div id="fb-root"></div><div class="fb-comments" data-href="http://resqmob.paperplane.io/" data-width="500" data-numposts="10"></div>');
+           (function(d, s, id){
+                 var js, fjs = d.getElementsByTagName(s)[0];
+                 if (d.getElementById(id)) {return;}
+                 js = d.createElement(s); js.id = id;
+                js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=885083968274479";
+                 fjs.parentNode.insertBefore(js, fjs);
+                }(document, 'script', 'facebook-jssdk'));
+        }
+
+    </script>
+</body>
+
+
+</html>
